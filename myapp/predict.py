@@ -74,8 +74,10 @@ def predict_age(image_path):
 
 # 모델 파일 경로 설정
     try:
-        model_path = './myapp/static/models_and_weights/base_full_model0.h5'
+        #model_path = './myapp/static/models_and_weights/base_full_model0.h5'
         #model_path = './myapp/static/models_and_weights/deeper_CNN_20231211_205112.h5'
+        #model_path = './myapp/static/models_and_weights/less_param_BW_CNN_20231214_035017.h5'
+        model_path = './myapp/static/models_and_weights/less_param_BW_CNN_20231214_214355.h5'
     except OSError as e:
         print(f"Error loading the model: {e}")
 # 모델 불러오기
@@ -88,15 +90,18 @@ def predict_age(image_path):
 # [여기를 폴더내의 다른 사진 파일들로 시도해보세요]
 
 # 이미지 불러오기 및 전처리
-    img = image.load_img(image_path, target_size=(224, 224))
+    img = image.load_img(image_path, target_size=(224, 224),color_mode="grayscale")
+    #path = './myapp/static/val/0915_2001_21_00000029_D.png'
+    #img=image.load_img(path, target_size=(224, 224))
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
     img_array /= 255.0  # 이미지를 모델이 훈련된 스케일로 전처리
+    
 # 모델 예측
     predictions = loaded_model.predict(img_array)
 
 # 예측 결과 출력
-    class_labels = ['0-9', '10-19', '20-25', '26-29', '30-35', '36-39', '40-49', '50+']
+    class_labels = ['0-9', '10-19', '20-29', '30-39', '40-49', '50+']
     class_idx = np.argmax(predictions[0])
     confidence = predictions[0, class_idx]
     predicted_class = class_labels[class_idx]
